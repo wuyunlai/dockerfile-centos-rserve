@@ -1,45 +1,25 @@
-#Dockerfile centos-rserve
-# Ñ¡ÔñÒ»¸öÒÑÓĞµÄos¾µÏñ×÷Îª»ù´¡
-FROM wuyl/centos-r:latest
+ï»¿#Dockerfile centos-rserve
+# é€‰æ‹©ä¸€ä¸ªå·²æœ‰çš„osé•œåƒä½œä¸ºåŸºç¡€
+FROM wuyl/centos-with-rbase:latest
 
-# ¾µÏñµÄ×÷Õß
+# é•œåƒçš„ä½œè€…
 MAINTAINER wuyl
 
-# ¸üĞÂ°²×°±ØÒª¿â
-RUN yum update && yum install -y \
-        libcurl4-openssl-dev \
-        libssl-dev \
-        libcairo-dev \
-        libnlopt-dev
-
-# °²×°RÓïÑÔ¿â£¨install packages£©
+# å®‰è£…Rè¯­è¨€åº“ï¼ˆinstall packagesï¼‰
 RUN echo 'install.packages("Rserve",,"http://rforge.net/",type="source")' > /tmp/packages.R \
     && Rscript /tmp/packages.R
 # Popular data science packages
-RUN echo 'install.packages(c("data.table", "dplyr", "plyr", "scales", "lubridate", "ggplot2", "grid", "BSDA", "cluster", "clustertend", "factoextra", "heatmaply", "NbClust", "RColorBrewer", "pandoc","ape","xlsx"), repos="http://cran.us.r-project.org", dependencies=TRUE)' > /tmp/packages2.R \
+RUN echo 'install.packages(c("Rserve", "rJava", "NbClust", "ape", "xlsx"), repos="http://cran.us.r-project.org", dependencies=TRUE)' > /tmp/packages2.R \
    && Rscript /tmp/packages2.R
 
-# ±©Â¶6311¶Ë¿Ú¹©RserveÊ¹ÓÃ
+# æš´éœ²6311ç«¯å£ä¾›Rserveä½¿ç”¨
 EXPOSE 6311
 
-# ¼ÓÔØ°ü²¢Æô¶¯rserve
+# åŠ è½½åŒ…å¹¶å¯åŠ¨rserve
 ENTRYPOINT R -e "\
 library(Rserve); \
-library(data.table); \
-library(dplyr); \
-library(plyr); \
-library(scales); \
-library(lubridate); \
-library(ggplot2); \
-library(grid); \
-library(BSDA); \
-library(cluster); \
-library(clustertend); \
-library(factoextra); \
-library(heatmaply); \
+library(rJava); \
 library(NbClust); \
-library(RColorBrewer); \
-library(pandoc); \
 library(ape); \
 library(xlsx); \
 
